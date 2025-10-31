@@ -3,8 +3,8 @@ import { NestFactory } from '@nestjs/core';
 //import * as crypto from 'crypto';
 //(global as any).crypto = crypto;
 
-import { AppModule } from './app.module';
-import { initSwagger } from './app.swagger';
+import { AppModule } from './src/app.module';
+import { initSwagger } from './src/app.swagger';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -12,6 +12,11 @@ async function bootstrap() {
   //const config = app.get(ConfigService);
 
   //const secret = config.get<string>(JWT_TOKEN);
+  app.enableCors({
+    origin: 'http://localhost:4200',
+    methods: 'GET,POST,PUT,DELETE,PATCH,HEAD',
+    credentials: true,
+  });
 
   // Habilitar validaciones globales
   initSwagger(app);

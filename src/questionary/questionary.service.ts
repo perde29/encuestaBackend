@@ -33,7 +33,11 @@ export class QuestionaryService {
   }
 
   async findAll(): Promise<Questionary[]> {
-    return await this.questionaryRepository.find();
+    return await this.questionaryRepository.find({
+      order: {
+        orden: 'ASC',
+      },
+    });
   }
 
   async findOne(id: number) {
@@ -51,5 +55,40 @@ export class QuestionaryService {
 
   async remove(id: number) {
     return await this.questionaryRepository.delete(id);
+  }
+
+  async updateOrden(id: number, updateQuestionaryDto: UpdateQuestionaryDto) {
+    console.log(id);
+
+    const post = this.questionaryRepository.findOne({ where: { id } });
+    if (!post) throw new NotFoundException('Questionary does not exist');
+
+    await this.questionaryRepository.update(id, {
+      ...updateQuestionaryDto,
+    });
+
+    const valores2 = await this.questionaryRepository
+      .createQueryBuilder('q')
+      .select(['q.id', 'q.orden'])
+      .orderBy('q.orden', 'ASC')
+      .getMany();
+
+    valores2.forEach((item, index) => {
+      let indice = index + 1;
+      if (item.id != id) {
+        if (indice === updateQuestionaryDto.orden && indice == 1) {
+          indice = indice + 1;
+        }
+
+        this.questionaryRepository.update(item.id, { orden: indice });
+        /*
+         const idItem = item.id;
+         this.questionaryRepository.createQueryBuilder()
+          .update('questionary').set({ indice })
+          .where('id = :id', { idItem }).execute();
+        */
+      }
+      console.log(`ID: ${item.id}, Orden: ${item.orden}`);
+    });
   }
 }

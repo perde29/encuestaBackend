@@ -58,6 +58,24 @@ export class QuestionaryController {
     return await this.questionaryService.update(+id, updateQuestionaryDto);
   }
 
+  @Patch('order/:id')
+  @Auth({
+    possession: 'any',
+    action: 'update',
+    resource: AppResources.QUESTIONARY,
+  })
+  async updateOrnde(
+    @Param('id') id: string,
+    @Body() updateQuestionaryDto: UpdateQuestionaryDto,
+  ) {
+    /*
+     console.log(id);
+     console.log(updateQuestionaryDto);
+    */
+
+    return await this.questionaryService.updateOrden(+id, updateQuestionaryDto);
+  }
+
   @Delete(':id')
   @Auth({
     possession: 'any',
