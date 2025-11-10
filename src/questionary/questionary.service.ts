@@ -91,4 +91,13 @@ export class QuestionaryService {
       console.log(`ID: ${item.id}, Orden: ${item.orden}`);
     });
   }
+
+  async lastOrden() {
+    return await this.questionaryRepository
+      .createQueryBuilder('q')
+      .select(['q.id', 'q.orden'])
+      .orderBy('q.orden', 'DESC')
+      .limit(1)
+      .getOne();
+  }
 }

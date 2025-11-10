@@ -40,6 +40,11 @@ export class QuestionaryController {
     return await this.questionaryService.findAll();
   }
 
+  @Get('lastorden')
+  async lastOrden() {
+    return await this.questionaryService.lastOrden();
+  }
+
   @Get(':id')
   async findOne(@Param('id') id: string) {
     return await this.questionaryService.findOne(+id);
