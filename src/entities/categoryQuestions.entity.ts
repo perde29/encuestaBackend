@@ -23,13 +23,4 @@ export class CategoryQuestions {
   })
   @JoinColumn({ name: 'category_id' })
   category: Category;
-
-  /*
-const catq = await categoryQuestionsRepository.findOne({ where: { questionsId: 1 } });
-// catq.category ❌ NO estará disponible a menos que uses relations:
-const catqWithRel = await categoryQuestionsRepository.findOne({
-  where: { questionsId: 1 },
-  relations: ['category'],
-});
-*/
 }

@@ -1,4 +1,4 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { IsIn, IsNumber, IsOptional, IsString } from 'class-validator';
 
 export class CreateQuestionaryDto {
@@ -13,7 +13,7 @@ export class CreateQuestionaryDto {
   @IsIn([1, 0], { message: `El State no es valido` })
   status?: number;
 
-  @ApiProperty()
+  @ApiPropertyOptional()
   @IsOptional()
   @IsNumber()
   orden?: number;

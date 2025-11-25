@@ -49,8 +49,8 @@ export class QuestionaryService {
   async update(id: number, updateQuestionaryDto: UpdateQuestionaryDto) {
     const post = this.questionaryRepository.findOne({ where: { id } });
     if (!post) throw new NotFoundException('Questionary does not exist');
-    const editPost = Object.assign(post, updateQuestionaryDto);
-    return await this.questionaryRepository.save(editPost);
+    await this.questionaryRepository.update(id, updateQuestionaryDto);
+    return this.questionaryRepository.findOneBy({ id });
   }
 
   async remove(id: number) {

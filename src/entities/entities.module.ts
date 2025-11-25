@@ -7,6 +7,8 @@ import { Questionary } from './questionary.entity';
 import { Questions } from './questions.entity';
 import { Alternative } from './alternative.entity';
 import { CategoryQuestions } from './categoryQuestions.entity';
+import { Customer } from './customer.entity';
+import { CustomerSurvey } from './customerSurvey.entity';
 
 @Module({
   imports: [
@@ -17,6 +19,8 @@ import { CategoryQuestions } from './categoryQuestions.entity';
       Questions,
       Alternative,
       CategoryQuestions,
+      Customer,
+      CustomerSurvey,
     ]),
   ],
   exports: [TypeOrmModule],

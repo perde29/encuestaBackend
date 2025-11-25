@@ -14,6 +14,7 @@ import { Questionary } from './questionary.entity';
 import { Exclude } from '@nestjs/class-transformer';
 import { Alternative } from './alternative.entity';
 import { CategoryQuestions } from './categoryQuestions.entity';
+import { CustomerSurvey } from './customerSurvey.entity';
 
 @Entity('questions')
 export class Questions {
@@ -97,4 +98,7 @@ export class Questions {
     (categoryQuestions) => categoryQuestions.questions,
   )
   categoryQuestions: CategoryQuestions[];
+
+  @OneToMany(() => CustomerSurvey, (customerSurvey) => customerSurvey.questions)
+  customerSurvey: CustomerSurvey[];
 }

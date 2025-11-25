@@ -37,9 +37,14 @@ export class QuestionsController {
     return await this.questionsService.findAll();
   }
 
+  @Get('questions-questionary/:id')
+  async getQuestionsQuestionaryId(@Param('id') id: number) {
+    return await this.questionsService.getQuestionsQuestionaryId(id);
+  }
+
   @Get(':id')
-  async findOne(@Param('id') id: string) {
-    return await this.questionsService.findOne(+id);
+  async findOne(@Param('id') id: number) {
+    return await this.questionsService.findOne(id);
   }
 
   @Patch(':id')

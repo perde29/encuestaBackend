@@ -57,10 +57,10 @@ export class QuestionaryController {
     resource: AppResources.QUESTIONARY,
   })
   async update(
-    @Param('id') id: string,
+    @Param('id') id: number,
     @Body() updateQuestionaryDto: UpdateQuestionaryDto,
   ) {
-    return await this.questionaryService.update(+id, updateQuestionaryDto);
+    return await this.questionaryService.update(id, updateQuestionaryDto);
   }
 
   @Patch('order/:id')
