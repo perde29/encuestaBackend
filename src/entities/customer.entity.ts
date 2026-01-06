@@ -7,7 +7,7 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { Category } from './category.entity';
-import { CustomerSurvey } from './customerSurvey.entity';
+import { CustomerSurvey } from './customer-survey.entity';
 
 @Entity('customer')
 export class Customer {

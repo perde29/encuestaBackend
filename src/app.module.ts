@@ -22,6 +22,7 @@ import { EntitiesModule } from './entities/entities.module';
 import { QuestionaryModule } from './questionary/questionary.module';
 import { QuestionsModule } from './questions/questions.module';
 import { AlternativeModule } from './alternative/alternative.module';
+import { CategoryQuestionsModule } from './category-questions/category-questions.module';
 
 // import config from './config/config';
 @Module({
@@ -60,6 +61,7 @@ import { AlternativeModule } from './alternative/alternative.module';
     QuestionaryModule,
     QuestionsModule,
     AlternativeModule,
+    CategoryQuestionsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

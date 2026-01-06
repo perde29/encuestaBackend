@@ -5,6 +5,7 @@ import {
   CreateDateColumn,
   Entity,
   JoinColumn,
+  ManyToMany,
   ManyToOne,
   OneToMany,
   PrimaryGeneratedColumn,
@@ -13,8 +14,9 @@ import {
 import { Questionary } from './questionary.entity';
 import { Exclude } from '@nestjs/class-transformer';
 import { Alternative } from './alternative.entity';
-import { CategoryQuestions } from './categoryQuestions.entity';
-import { CustomerSurvey } from './customerSurvey.entity';
+//import { CategoryQuestions } from './category-questions.entity';
+import { CustomerSurvey } from './customer-survey.entity';
+import { Category } from './category.entity';
 
 @Entity('questions')
 export class Questions {
@@ -29,7 +31,7 @@ export class Questions {
   @Column({ type: 'varchar', length: 255 })
   title: string;
 
-  @Column({ name: 'input_type', type: 'int', select: false })
+  @Column({ name: 'input_type', type: 'int' }) /* select: false */
   inputType: number;
 
   @CreateDateColumn({
@@ -93,11 +95,8 @@ export class Questions {
   @OneToMany(() => Alternative, (alternative) => alternative.questions)
   alternative: Alternative[];
 
-  @OneToMany(
-    () => CategoryQuestions,
-    (categoryQuestions) => categoryQuestions.questions,
-  )
-  categoryQuestions: CategoryQuestions[];
+  @ManyToMany(() => Category, (category) => category.questions)
+  categories: Category[];
 
   @OneToMany(() => CustomerSurvey, (customerSurvey) => customerSurvey.questions)
   customerSurvey: CustomerSurvey[];

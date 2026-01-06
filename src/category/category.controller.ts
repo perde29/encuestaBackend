@@ -35,8 +35,8 @@ export class CategoryController {
   }
 
   @Get(':id')
-  async findOne(@Param('id') id: string) {
-    return await this.categoryService.findOne(+id);
+  async findOne(@Param('id') id: number) {
+    return await this.categoryService.findOne(id);
   }
 
   @Auth({

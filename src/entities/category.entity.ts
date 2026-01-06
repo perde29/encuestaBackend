@@ -1,6 +1,14 @@
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
-import { CategoryQuestions } from './categoryQuestions.entity';
+import {
+  Column,
+  Entity,
+  JoinTable,
+  ManyToMany,
+  OneToMany,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
+//import { CategoryQuestions } from './category-questions.entity';
 import { Customer } from './customer.entity';
+import { Questions } from './questions.entity';
 
 @Entity('category')
 export class Category {
@@ -13,11 +21,19 @@ export class Category {
   @Column({ type: 'int' })
   state: number;
 
-  @OneToMany(
-    () => CategoryQuestions,
-    (categoryQuestions) => categoryQuestions.category,
-  )
-  categoryQuestions: CategoryQuestions[];
+  @ManyToMany(() => Questions, (question) => question.categories)
+  @JoinTable({
+    name: 'category_questions',
+    joinColumn: {
+      name: 'category_id',
+      referencedColumnName: 'id',
+    },
+    inverseJoinColumn: {
+      name: 'questions_id',
+      referencedColumnName: 'id',
+    },
+  })
+  questions: Questions[];
 
   @OneToMany(() => Customer, (customer) => customer.category)
   customer: Customer[];
