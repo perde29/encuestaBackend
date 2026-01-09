@@ -1,12 +1,4 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  Patch,
-  Param,
-  Delete,
-} from '@nestjs/common';
+import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 import { CategoryQuestionsService } from './category-questions.service';
 //import { CreateCategoryQuestionDto } from './dto/create-category-question.dto';
 //import { UpdateCategoryQuestionDto } from './dto/update-category-question.dto';
@@ -21,15 +13,17 @@ export class CategoryQuestionsController {
 
   @Get(':id')
   async findCategoryQuestions(@Param('id') id: number) {
-    // return this.categoryQuestionsService.findCategoryQuestions(id);
+    return this.categoryQuestionsService.getQuestionsByCategory(id);
   }
 
   /*
   @Post()
-  create(@Body() createCategoryQuestionDto: CreateCategoryQuestionDto) {
+  create(@Body() createCategoryQuestionDto: any) {
     return this.categoryQuestionsService.create(createCategoryQuestionDto);
   }
+  */
 
+  /*
   @Get()
   findAll() {
     return this.categoryQuestionsService.findAll();
