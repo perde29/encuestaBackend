@@ -26,6 +26,14 @@ export class CategoryQuestionsService {
     return questions.categories;
   }
 
+  async update(id: number, body: any) {
+    console.log(id);
+
+    console.log(body);
+
+    return null;
+  }
+
   /*
   async create(createCategoryQuestionDto) {
     const category = await this.categoryRepository.findOne({

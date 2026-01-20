@@ -24,7 +24,7 @@ export class QuestionsService {
       })
       .getOne();
 
-    // console.log(dat);
+    console.log(dat);
     if (dat)
       throw new NotFoundException(
         'Ya existe la misma pregnta en el cuestionario.',

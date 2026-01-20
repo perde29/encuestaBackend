@@ -29,6 +29,7 @@ export class QuestionsController {
     @User() user: UserEntity,
   ) {
     const userId = user.id ? user.id : null;
+
     return await this.questionsService.create(createQuestionDto, userId);
   }
 
@@ -54,12 +55,12 @@ export class QuestionsController {
     resource: AppResources.QUESTIONS,
   })
   async update(
-    @Param('id') id: string,
+    @Param('id') id: number,
     @Body() updateQuestionDto: UpdateQuestionDto,
     @User() user: UserEntity,
   ) {
     const userId = user.id ? user.id : null;
-    return await this.questionsService.update(+id, updateQuestionDto, userId);
+    return await this.questionsService.update(id, updateQuestionDto, userId);
   }
 
   @Delete(':id')

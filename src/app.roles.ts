@@ -13,6 +13,7 @@ export enum AppResources {
   QUESTIONARY = 'questionary',
   QUESTIONS = 'questions',
   ALTERNATIVE = 'alternative',
+  CATEGORYQUESTIONS = 'category-questions',
 }
 
 roles
@@ -30,6 +31,7 @@ roles
     AppResources.QUESTIONARY,
     AppResources.QUESTIONS,
     AppResources.ALTERNATIVE,
+    AppResources.CATEGORYQUESTIONS,
   ])
   .updateAny([
     AppResources.USER,
@@ -37,6 +39,7 @@ roles
     AppResources.QUESTIONARY,
     AppResources.QUESTIONS,
     AppResources.ALTERNATIVE,
+    AppResources.CATEGORYQUESTIONS,
   ])
   .deleteAny([
     AppResources.USER,
@@ -44,4 +47,5 @@ roles
     AppResources.QUESTIONARY,
     AppResources.QUESTIONS,
     AppResources.ALTERNATIVE,
+    AppResources.CATEGORYQUESTIONS,
   ]);
