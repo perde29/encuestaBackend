@@ -5,6 +5,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Questions } from '@/entities/questions.entity';
 import { DataSource, Repository } from 'typeorm';
 import { CustomerSurvey } from '@/entities/customer-survey.entity';
+import { CategoryQuestionsService } from 'src/category-questions/category-questions.service';
 
 @Injectable()
 export class QuestionsService {
@@ -12,6 +13,7 @@ export class QuestionsService {
     @InjectRepository(Questions)
     private readonly questionsRepository: Repository<Questions>,
     private readonly dataSource: DataSource,
+    private readonly categoryQuestionsService: CategoryQuestionsService,
   ) {}
 
   async create(createQuestionDto: CreateQuestionDto, userId) {
@@ -24,7 +26,6 @@ export class QuestionsService {
       })
       .getOne();
 
-    console.log(dat);
     if (dat)
       throw new NotFoundException(
         'Ya existe la misma pregnta en el cuestionario.',
@@ -35,8 +36,12 @@ export class QuestionsService {
       questionary: { id: createQuestionDto.questionaryId },
       userInsert: userId,
     });
-
     const questions = await this.questionsRepository.save(post);
+
+    await this.categoryQuestionsService.saveCategoryQuestions(
+      questions.id,
+      createQuestionDto.categories,
+    );
 
     return questions;
   }
@@ -63,6 +68,11 @@ export class QuestionsService {
     });
 
     const questions = await this.questionsRepository.save(editPost);
+
+    await this.categoryQuestionsService.saveCategoryQuestions(
+      questions.id,
+      updateQuestionDto.categories,
+    );
 
     return questions;
   }

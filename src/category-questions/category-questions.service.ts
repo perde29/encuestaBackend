@@ -1,17 +1,19 @@
 //import { CategoryQuestions } from '@/entities/category-questions.entity';
-//import { Category } from '@/entities/category.entity';
+import { Category } from '@/entities/category.entity';
 import { Questions } from '@/entities/questions.entity';
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
+import { DataSource } from 'typeorm';
 
 @Injectable()
 export class CategoryQuestionsService {
   constructor(
-    // @InjectRepository(Category)
-    // private readonly categoryRepository: Repository<Category>,
+    @InjectRepository(Category)
+    private readonly categoryRepository: Repository<Category>,
     @InjectRepository(Questions)
     private readonly questionsRepository: Repository<Questions>,
+    private readonly dataSource: DataSource,
   ) {}
 
   async getQuestionsByCategory(id: number) {
@@ -26,26 +28,39 @@ export class CategoryQuestionsService {
     return questions.categories;
   }
 
-  async update(id: number, body: any) {
-    console.log(id);
+  async saveCategoryQuestions(questionaryId: number, categories: number[]) {
+    await this.dataSource.transaction(async (manager) => {
+      // 1️⃣ Obtener relaciones actuales
+      const question = await manager.findOne(Questions, {
+        where: { id: questionaryId },
+        relations: ['categories'],
+      });
 
-    console.log(body);
+      if (!question) {
+        throw new NotFoundException('Pregunta no encontrada');
+      }
 
-    return null;
-  }
+      // 2️⃣ Eliminar TODAS las relaciones existentes
+      if (question.categories.length > 0) {
+        await manager
+          .createQueryBuilder()
+          .relation(Questions, 'categories')
+          .of(questionaryId)
+          .remove(question.categories);
+      }
 
-  /*
-  async create(createCategoryQuestionDto) {
-    const category = await this.categoryRepository.findOne({
-      where: { id: createCategoryQuestionDto.id },
-      relations: ['questions'],
+      // 3️⃣ Insertar nuevas relaciones
+      if (categories.length > 0) {
+        const categoriesEntities = await manager.findBy(Category, {
+          id: In(categories),
+        });
+
+        await manager
+          .createQueryBuilder()
+          .relation(Questions, 'categories')
+          .of(questionaryId)
+          .add(categoriesEntities);
+      }
     });
-
-    if (!category) {
-      throw new Error('Categoría no encontrada');
-    }
-
-    return null;
   }
-  */
 }

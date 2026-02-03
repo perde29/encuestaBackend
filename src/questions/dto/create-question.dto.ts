@@ -27,4 +27,8 @@ export class CreateQuestionDto {
   @ApiProperty()
   @IsNumber()
   questionnaireResponse: number;
+
+  @ApiProperty()
+  @IsOptional()
+  categories: [];
 }
