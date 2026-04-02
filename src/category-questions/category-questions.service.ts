@@ -9,8 +9,8 @@ import { DataSource } from 'typeorm';
 @Injectable()
 export class CategoryQuestionsService {
   constructor(
-    @InjectRepository(Category)
-    private readonly categoryRepository: Repository<Category>,
+    //  @InjectRepository(Category)
+    //   private readonly categoryRepository: Repository<Category>,
     @InjectRepository(Questions)
     private readonly questionsRepository: Repository<Questions>,
     private readonly dataSource: DataSource,
@@ -23,7 +23,7 @@ export class CategoryQuestionsService {
     });
 
     if (!questions) {
-      throw new Error('Categoría no encontrada');
+      return [];
     }
     return questions.categories;
   }
