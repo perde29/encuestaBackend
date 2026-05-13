@@ -72,4 +72,30 @@ export class AlternativeService {
   async remove(id: number) {
     return await this.alternativeRepository.delete(id);
   }
+
+  async removeByQuestionId(questionsId: number) {
+    return await this.alternativeRepository
+      .createQueryBuilder('alternative')
+      .delete()
+      .where('questions_id = :questionsId', { questionsId })
+      .execute();
+  }
+
+  async removeByQuestionaryId(questionaryId: number) {
+    return this.alternativeRepository.manager.query(
+      'DELETE FROM alternative WHERE questions_id IN (SELECT id FROM questions WHERE questionary_id = ?)',
+      [questionaryId],
+    );
+
+    /*
+    return await this.alternativeRepository
+      .createQueryBuilder('alternative')
+      .delete()
+      .where(
+        'questions_id IN (SELECT id FROM questions WHERE questionary_id = :questionaryId)',
+        { questionaryId },
+      )
+      .execute();
+    */
+  }
 }

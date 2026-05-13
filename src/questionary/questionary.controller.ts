@@ -73,11 +73,6 @@ export class QuestionaryController {
     @Param('id') id: string,
     @Body() updateQuestionaryDto: UpdateQuestionaryDto,
   ) {
-    /*
-     console.log(id);
-     console.log(updateQuestionaryDto);
-    */
-
     return await this.questionaryService.updateOrden(+id, updateQuestionaryDto);
   }
 

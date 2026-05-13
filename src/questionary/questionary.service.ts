@@ -1,15 +1,26 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { CreateQuestionaryDto } from './dto/create-questionary.dto';
 import { UpdateQuestionaryDto } from './dto/update-questionary.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Questionary } from '@/entities/questionary.entity';
+import { CustomerSurvey } from '@/entities/customer-survey.entity';
 import { Repository } from 'typeorm';
+import { QuestionsService } from 'src/questions/questions.service';
+import { AlternativeService } from 'src/alternative/alternative.service';
 
 @Injectable()
 export class QuestionaryService {
   constructor(
     @InjectRepository(Questionary)
     private readonly questionaryRepository: Repository<Questionary>,
+    @InjectRepository(CustomerSurvey)
+    private readonly customerSurveyRepository: Repository<CustomerSurvey>,
+    private readonly questionsService: QuestionsService,
+    private readonly alternativeService: AlternativeService,
   ) {}
 
   async create(createQuestionaryDto: CreateQuestionaryDto, userId) {
@@ -54,7 +65,22 @@ export class QuestionaryService {
   }
 
   async remove(id: number) {
-    return await this.questionaryRepository.delete(id);
+    const surveys = await this.customerSurveyRepository
+      .createQueryBuilder('cs')
+      .innerJoin('cs.questions', 'q')
+      .innerJoin('q.questionary', 'qn')
+      .where('qn.id = :id', { id })
+      .getMany();
+
+    if (surveys.length > 0) {
+      throw new BadRequestException(
+        'No se puede eliminar el cuestionario porque tiene respuestas registradas.',
+      );
+    }
+
+    await this.alternativeService.removeByQuestionaryId(id);
+    await this.questionsService.removeByQuestionaryId(id);
+    return this.questionaryRepository.delete(id);
   }
 
   async updateOrden(id: number, updateQuestionaryDto: UpdateQuestionaryDto) {
@@ -88,7 +114,6 @@ export class QuestionaryService {
           .where('id = :id', { idItem }).execute();
         */
       }
-      console.log(`ID: ${item.id}, Orden: ${item.orden}`);
     });
   }
 

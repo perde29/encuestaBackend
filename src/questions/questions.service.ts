@@ -120,4 +120,12 @@ export class QuestionsService {
       .getRawMany();
     /**/
   }
+
+  async removeByQuestionaryId(id: number) {
+    return await this.questionsRepository
+      .createQueryBuilder('questions')
+      .delete()
+      .where('questionary_id = :id', { id })
+      .execute();
+  }
 }

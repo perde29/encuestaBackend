@@ -7,5 +7,6 @@ import { EntitiesModule } from '@/entities/entities.module';
   imports: [EntitiesModule],
   controllers: [AlternativeController],
   providers: [AlternativeService],
+  exports: [AlternativeService],
 })
 export class AlternativeModule {}

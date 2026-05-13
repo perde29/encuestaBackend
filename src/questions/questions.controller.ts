@@ -61,10 +61,6 @@ export class QuestionsController {
   ) {
     const userId = user.id ? user.id : null;
 
-    console.log('ID:', id);
-    console.log('User ID:', userId);
-    console.log('Update Question DTO:', updateQuestionDto);
-
     return await this.questionsService.update(id, updateQuestionDto, userId);
   }
 

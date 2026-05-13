@@ -8,5 +8,6 @@ import { CategoryQuestionsService } from 'src/category-questions/category-questi
   imports: [EntitiesModule],
   controllers: [QuestionsController],
   providers: [QuestionsService, CategoryQuestionsService],
+  exports: [QuestionsService],
 })
 export class QuestionsModule {}
