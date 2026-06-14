@@ -98,4 +98,15 @@ export class AlternativeService {
       .execute();
     */
   }
+
+  async preguntaIdAlternative(questionsId: number) {
+    return await this.alternativeRepository
+      .createQueryBuilder('a')
+      .select(['a.id', 'a.title'])
+      .innerJoin('a.questions', 'questions')
+      .where({
+        questions: questionsId,
+      })
+      .getMany();
+  }
 }

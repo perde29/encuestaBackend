@@ -34,6 +34,18 @@ export class CategoryController {
     return await this.categoryService.findAll();
   }
 
+  @Get('questionnaire-list')
+  async questionnaireList() {
+    return await this.categoryService.questionnaireList();
+  }
+
+  /*
+  @Get('views-surveys/:id')
+  async viewsSurveys(@Param('id') id: number) {
+    return await this.categoryService.viewsSurveys(id);
+  }
+  */
+
   @Get(':id')
   async findOne(@Param('id') id: number) {
     return await this.categoryService.findOne(id);

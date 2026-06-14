@@ -128,4 +128,15 @@ export class QuestionsService {
       .where('questionary_id = :id', { id })
       .execute();
   }
+
+  async getTitleCustomer() {
+    /*
+      $sql = "SELECT id, title FROM questions WHERE questionnaire_response = '1';";       
+        $conn = $this->getEntityManager()->getConnection();
+        $stmt = $conn->prepare($sql);
+        $result = $stmt->executeQuery();
+    
+        return $result->fetchAllAssociative();
+    */
+  }
 }

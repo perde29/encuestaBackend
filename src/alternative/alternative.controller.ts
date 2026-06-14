@@ -42,6 +42,11 @@ export class AlternativeController {
     return await this.alternativeService.findOne(+id);
   }
 
+  @Get('pregunta/:questionsId')
+  async preguntaIdAlternative(@Param('questionsId') questionsId: number) {
+    return await this.alternativeService.preguntaIdAlternative(questionsId);
+  }
+
   @Patch(':id')
   @Auth({
     possession: 'any',

@@ -50,6 +50,11 @@ export class QuestionaryController {
     return await this.questionaryService.findOne(+id);
   }
 
+  @Get('views-surveys/:id')
+  async viewsSurveys(@Param('id') id: number) {
+    return await this.questionaryService.viewsSurveys(id);
+  }
+
   @Patch(':id')
   @Auth({
     possession: 'any',

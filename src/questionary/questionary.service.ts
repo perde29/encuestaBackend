@@ -117,6 +117,23 @@ export class QuestionaryService {
     });
   }
 
+  async viewsSurveys(id: number) {
+    return await this.questionaryRepository
+      .createQueryBuilder('qnary')
+      .select('qnary.id', 'questionary_id')
+      .addSelect('qnary.title', 'title')
+      .addSelect('qons.id', 'id_pregunta')
+      .addSelect('qons.title', 'pregunta')
+      .addSelect('qons.input_type', 'input_type')
+      .innerJoin('qnary.questions', 'qons')
+      .innerJoin('qons.categories', 'cateques')
+      .where('qnary.status = :status', { status: 1 })
+      .andWhere('cateques.id = :id', { id })
+      .andWhere('qons.status = :qstatus', { qstatus: '1' })
+      .orderBy('qnary.orden', 'ASC')
+      .getRawMany();
+  }
+
   async lastOrden() {
     return await this.questionaryRepository
       .createQueryBuilder('q')

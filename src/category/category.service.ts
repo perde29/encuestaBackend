@@ -34,6 +34,33 @@ export class CategoryService {
     return await this.categoryRepository.save(editPost);
   }
 
+  async questionnaireList() {
+    const post = await this.categoryRepository
+      .createQueryBuilder('c')
+      .select('c.id', 'id')
+      .addSelect('c.title', 'title')
+      .addSelect(
+        "case when c.state = 1 THEN 'Ativo' else 'Inativo' end",
+        'state',
+      )
+      .getRawMany();
+    return await post;
+  }
+
+  /*
+  async viewsSurveys(id: number) {
+    return await this.categoryRepository.manager.query(
+      `SELECT qnary.id AS questionary_id, qnary.title, qons.id AS id_pregunta, qons.title AS pregunta, qons.input_type
+       FROM questionary qnary
+       INNER JOIN questions qons ON qnary.id = qons.questionary_id
+       INNER JOIN category_questions cateques ON qons.id = cateques.questions_id
+       WHERE qnary.status = 1 AND cateques.category_id = ? AND qons.status = '1'
+       ORDER BY orden`,
+      [id],
+    );
+  }
+  */
+
   async remove(id: number) {
     return await this.categoryRepository.delete(id);
   }
