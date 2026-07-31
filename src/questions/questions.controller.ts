@@ -43,6 +43,16 @@ export class QuestionsController {
     return await this.questionsService.getQuestionsQuestionaryId(id);
   }
 
+  @Get('title-customer')
+  async getTitleCustomer() {
+    return await this.questionsService.getTitleCustomer();
+  }
+
+  @Get('register-customer')
+  async getRegisterCustomer() {
+    return await this.questionsService.getRegisterCustomer();
+  }
+
   @Get(':id')
   async findOne(@Param('id') id: number) {
     return await this.questionsService.findOne(id);

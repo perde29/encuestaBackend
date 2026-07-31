@@ -6,14 +6,19 @@ import { Questions } from '@/entities/questions.entity';
 import { DataSource, Repository } from 'typeorm';
 import { CustomerSurvey } from '@/entities/customer-survey.entity';
 import { CategoryQuestionsService } from 'src/category-questions/category-questions.service';
+import { Customer } from '../entities/customer.entity';
+import { AlternativeService } from 'src/alternative/alternative.service';
 
 @Injectable()
 export class QuestionsService {
   constructor(
     @InjectRepository(Questions)
     private readonly questionsRepository: Repository<Questions>,
+    @InjectRepository(Customer)
+    private readonly customerRepository: Repository<Customer>,
     private readonly dataSource: DataSource,
     private readonly categoryQuestionsService: CategoryQuestionsService,
+    private readonly alternativeService: AlternativeService,
   ) {}
 
   async create(createQuestionDto: CreateQuestionDto, userId) {
@@ -130,13 +135,57 @@ export class QuestionsService {
   }
 
   async getTitleCustomer() {
+    return await this.questionsRepository
+      .createQueryBuilder('q')
+      .select('q.id', 'id')
+      .addSelect('q.title', 'title')
+      .where('q.questionnaire_response = :response', { response: 1 })
+      .getRawMany();
+  }
+
+  async getRegisterCustomer() {
+    const datos = await this.customerRepository
+      .createQueryBuilder('c')
+      .innerJoin('c.customerSurvey', 'cs')
+      .select('cs.id', 'id')
+      .addSelect('cs.customer_id', 'customer_id')
+      .addSelect('cs.questions_id', 'questions_id')
+      .addSelect('cs.type_alternative', 'type_alternative')
+      .addSelect('cs.answer', 'answer')
+      .addSelect('cs.id_alternative', 'id_alternative')
+      .addSelect(
+        `(SELECT title FROM category WHERE id = c.category_id)`,
+        'category',
+      )
+      .where(
+        "cs.questions_id IN (SELECT id FROM questions WHERE questionnaire_response = '1')",
+      )
+      .orderBy('c. category_id', 'ASC')
+      .getRawMany();
+
+    const registro: Record<string, Record<string, unknown>> = {};
+
+    for (const reg of datos) {
+      if (!registro[reg.customer_id]) {
+        registro[reg.customer_id] = {};
+      }
+
+      if (reg.type_alternative == '3') {
+        registro[reg.customer_id][reg.questions_id] =
+          await this.alternativeService.getAlternativeTitle(reg.id_alternative);
+      } else {
+        registro[reg.customer_id][reg.questions_id] = reg.answer;
+      }
+
+      registro[reg.customer_id]['cat'] = reg.category;
+      registro[reg.customer_id]['customer_id'] = reg.customer_id;
+    }
+
     /*
-      $sql = "SELECT id, title FROM questions WHERE questionnaire_response = '1';";       
-        $conn = $this->getEntityManager()->getConnection();
-        $stmt = $conn->prepare($sql);
-        $result = $stmt->executeQuery();
-    
-        return $result->fetchAllAssociative();
+     console.log(registro);
+     console.log(Object.values(registro));
     */
+
+    return registro;
   }
 }

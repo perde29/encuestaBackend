@@ -109,4 +109,28 @@ export class AlternativeService {
       })
       .getMany();
   }
+
+  /*
+   public function getAlternativeTitle($id)
+    {
+
+        $datos = $this->getEntityManager()->createQueryBuilder()
+            ->select('a.id, a.title')
+            ->from(Alternative::class, 'a')
+            ->where('a.id = :id')
+            ->setParameter('id', $id)
+            ->getQuery()
+            ->getOneOrNullResult();
+
+        return (isset($datos['title'])) ? $datos['title'] : '';
+    }
+  */
+
+  async getAlternativeTitle(id: number) {
+    const alternative = await this.alternativeRepository.findOne({
+      where: { id },
+    });
+
+    return alternative ? alternative.title : null;
+  }
 }

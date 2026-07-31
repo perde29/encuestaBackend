@@ -2,12 +2,13 @@ import { Module } from '@nestjs/common';
 import { QuestionsService } from './questions.service';
 import { QuestionsController } from './questions.controller';
 import { EntitiesModule } from '@/entities/entities.module';
-import { CategoryQuestionsService } from 'src/category-questions/category-questions.service';
+import { CategoryQuestionsModule } from 'src/category-questions/category-questions.module';
+import { AlternativeModule } from 'src/alternative/alternative.module';
 
 @Module({
-  imports: [EntitiesModule],
+  imports: [EntitiesModule, CategoryQuestionsModule, AlternativeModule],
   controllers: [QuestionsController],
-  providers: [QuestionsService, CategoryQuestionsService],
+  providers: [QuestionsService],
   exports: [QuestionsService],
 })
 export class QuestionsModule {}
