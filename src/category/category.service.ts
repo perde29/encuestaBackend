@@ -4,12 +4,18 @@ import { UpdateCategoryDto } from './dto/update-category.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Category } from '../entities/category.entity';
 import { Repository } from 'typeorm';
+import { Customer } from '@/entities/customer.entity';
+import { CustomerSurvey } from '@/entities/customer-survey.entity';
 
 @Injectable()
 export class CategoryService {
   constructor(
     @InjectRepository(Category)
     private readonly categoryRepository: Repository<Category>,
+    @InjectRepository(Customer)
+    private readonly customerRepository: Repository<Customer>,
+    @InjectRepository(CustomerSurvey)
+    private readonly customerSurveyRepository: Repository<CustomerSurvey>,
   ) {}
 
   async create(createCategoryDto: CreateCategoryDto) {
@@ -62,6 +68,24 @@ export class CategoryService {
   */
 
   async remove(id: number) {
+    const customer = await this.customerRepository.findOne({
+      where: { category: { id } },
+    });
+
+    if (customer) {
+      const customerSurveys = await this.customerSurveyRepository.find({
+        where: { customer: { category: { id } } },
+      });
+
+      if (customerSurveys.length > 0) {
+        throw new NotFoundException(
+          'No se puede eliminar el Sector porque tiene encuestas asociadas.',
+        );
+      }
+
+      await this.customerRepository.delete({ category: { id } });
+    }
+
     return await this.categoryRepository.delete(id);
   }
 }
