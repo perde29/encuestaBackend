@@ -16,6 +16,7 @@ import { Questionary } from '@/entities/questionary.entity';
 import { QuestionaryService } from './questionary.service';
 import { CreateQuestionaryDto } from './dto/create-questionary.dto';
 import { UpdateQuestionaryDto } from './dto/update-questionary.dto';
+import { ViewsSurveyDto } from './dto/views-survey.dto';
 
 @Controller('questionary')
 export class QuestionaryController {
@@ -33,6 +34,11 @@ export class QuestionaryController {
   ) {
     const userId = user.id ? user.id : null;
     return await this.questionaryService.create(createQuestionaryDto, userId);
+  }
+
+  @Post('views-surveys-2')
+  async viewsSurveysAction(@Body() data: ViewsSurveyDto) {
+    return await this.questionaryService.viewsSurveys2(data);
   }
 
   @Get()

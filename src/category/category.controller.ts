@@ -29,22 +29,25 @@ export class CategoryController {
     return await this.categoryService.create(createCategoryDto);
   }
 
+  @Post('views-surveys')
+  async viewsSurveysAction(@Body() data: any) {
+    return await this.categoryService.viewsSurveysAction(data);
+  }
+
   @Get()
   async findAll() {
     return await this.categoryService.findAll();
+  }
+
+  @Get('all-active')
+  async findAllActive() {
+    return await this.categoryService.findAllActive();
   }
 
   @Get('questionnaire-list')
   async questionnaireList() {
     return await this.categoryService.questionnaireList();
   }
-
-  /*
-  @Get('views-surveys/:id')
-  async viewsSurveys(@Param('id') id: number) {
-    return await this.categoryService.viewsSurveys(id);
-  }
-  */
 
   @Get(':id')
   async findOne(@Param('id') id: number) {

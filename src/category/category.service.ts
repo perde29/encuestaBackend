@@ -23,8 +23,72 @@ export class CategoryService {
     return await this.categoryRepository.save(post);
   }
 
+  async surveySection(categoryId: number) {
+    /* 
+     $sql = "SELECT DISTINCT qnary.id,qnary.orden
+                FROM questionary qnary
+                INNER JOIN questions qons  ON qnary.id = qons.questionary_id
+                INNER JOIN category_questions cateques ON qons.id = cateques.questions_id
+                WHERE qnary.status = 1 AND cateques.category_id = :category_id AND qons.status = '1'
+                ORDER BY qnary.orden asc";
+
+        $conn = $this->getEntityManager()->getConnection();
+        $stmt = $conn->prepare($sql);
+        $result = $stmt->executeQuery(['category_id' => $sector]);
+
+        return $result->fetchAllAssociative();
+    */
+  }
+
+  async viewsSurveysAction(data: any) {
+    const { categoryId, orden } = data;
+
+    return await this.categoryRepository
+      .createQueryBuilder('category')
+      .innerJoin('category.questions', 'question')
+      .innerJoin('question.questionary', 'questionary')
+      .select('questionary.id', 'questionary_id')
+      .addSelect('questionary.title', 'title')
+      .addSelect('questionary.orden', 'orden')
+      .addSelect('question.id', 'id_pregunta')
+      .addSelect('question.title', 'pregunta')
+      .addSelect('question.inputType', 'input_type')
+      .where('category.id = :categoryId', { categoryId })
+      .andWhere('questionary.status = :status', { status: 1 })
+      .andWhere('question.status = :questionStatus', { questionStatus: 1 })
+      .andWhere('questionary.orden = :orden', { orden })
+      .orderBy('questionary.orden', 'ASC')
+      .getRawMany();
+  }
+
+  /*
+   public function viewsSurvey2($sector, $orden) {
+
+      $sql = "SELECT qnary.id AS questionary_id, qnary.title , qnary.orden , qons.id AS id_pregunta, qons.title AS pregunta , qons.input_type 
+              FROM questionary qnary
+              INNER JOIN questions qons  ON qnary.id = qons.questionary_id
+              INNER JOIN category_questions cateques ON qons.id = cateques.questions_id
+              WHERE qnary.status = 1 
+                  AND qons.status = 1
+                  AND cateques.category_id = :category_id 
+                  AND qnary.orden = :orden
+              ORDER BY orden;";
+
+      $conn = $this->getEntityManager()->getConnection();
+      $stmt = $conn->prepare($sql);
+      $result = $stmt->executeQuery(['category_id' => $sector, 'orden' => $orden ]); // [ 'questions_id' => $id ]
+
+      return $result->fetchAllAssociative();
+
+   }
+  */
+
   async findAll(): Promise<Category[]> {
     return await this.categoryRepository.find();
+  }
+
+  async findAllActive(): Promise<Category[]> {
+    return await this.categoryRepository.find({ where: { state: 1 } });
   }
 
   async findOne(id: number) {

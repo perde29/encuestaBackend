@@ -121,6 +121,7 @@ export class QuestionaryService {
     return await this.questionaryRepository
       .createQueryBuilder('qnary')
       .select('qnary.id', 'questionary_id')
+      .addSelect('qnary.orden', 'orden')
       .addSelect('qnary.title', 'title')
       .addSelect('qons.id', 'id_pregunta')
       .addSelect('qons.title', 'pregunta')
@@ -129,6 +130,43 @@ export class QuestionaryService {
       .innerJoin('qons.categories', 'cateques')
       .where('qnary.status = :status', { status: 1 })
       .andWhere('cateques.id = :id', { id })
+      .andWhere('qons.status = :qstatus', { qstatus: '1' })
+      .orderBy('qnary.orden', 'ASC')
+      .getRawMany();
+  }
+
+  async viewsSurveys2(data: any) {
+    /*
+      $sql = "SELECT qnary.id AS questionary_id, qnary.title , qnary.orden , qons.id AS id_pregunta, qons.title AS pregunta , qons.input_type 
+                FROM questionary qnary
+                INNER JOIN questions qons  ON qnary.id = qons.questionary_id
+                INNER JOIN category_questions cateques ON qons.id = cateques.questions_id
+                WHERE qnary.status = 1 
+                    AND qons.status = 1
+                    AND cateques.category_id = :category_id 
+                    AND qnary.orden = :orden
+                ORDER BY orden;";
+
+        $conn = $this->getEntityManager()->getConnection();
+        $stmt = $conn->prepare($sql);
+        $result = $stmt->executeQuery(['category_id' => $sector, 'orden' => $orden ]); // [ 'questions_id' => $id ]
+
+        return $result->fetchAllAssociative();
+    */
+
+    return await this.questionaryRepository
+      .createQueryBuilder('qnary')
+      .select('qnary.id', 'questionary_id')
+      .addSelect('qnary.orden', 'orden')
+      .addSelect('qnary.title', 'title')
+      .addSelect('qons.id', 'id_pregunta')
+      .addSelect('qons.title', 'pregunta')
+      .addSelect('qons.input_type', 'input_type')
+      .innerJoin('qnary.questions', 'qons')
+      .innerJoin('qons.categories', 'cateques')
+      .where('qnary.status = :status', { status: 1 })
+      .andWhere('cateques.id = :category_id', { category_id: data.category_id })
+      .andWhere('qnary.orden = :orden', { orden: data.orden })
       .andWhere('qons.status = :qstatus', { qstatus: '1' })
       .orderBy('qnary.orden', 'ASC')
       .getRawMany();
