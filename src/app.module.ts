@@ -23,6 +23,7 @@ import { QuestionaryModule } from './questionary/questionary.module';
 import { QuestionsModule } from './questions/questions.module';
 import { AlternativeModule } from './alternative/alternative.module';
 import { CategoryQuestionsModule } from './category-questions/category-questions.module';
+import { CustomerSurveyModule } from './customer-survey/customer-survey.module';
 
 // import config from './config/config';
 @Module({
@@ -62,6 +63,7 @@ import { CategoryQuestionsModule } from './category-questions/category-questions
     QuestionsModule,
     AlternativeModule,
     CategoryQuestionsModule,
+    CustomerSurveyModule,
   ],
   controllers: [AppController],
   providers: [AppService],
